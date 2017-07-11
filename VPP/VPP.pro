@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-QT += qml quick bluetooth network androidextras websockets
+QT += qml quick bluetooth network androidextras websockets quickcontrols2
 
 CONFIG += c++11 qzxing_multimedia qzxing_qml
 

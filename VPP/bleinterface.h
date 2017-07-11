@@ -82,6 +82,8 @@ signals:
     void devivedisconnect();
     void device_found(QStringList name, QStringList add);
     void scanblefinnish();
+    void ble_scan_connect();
+    void ble_connect();
 
 private slots:
     //QBluetothDeviceDiscoveryAgent
@@ -126,6 +128,7 @@ private:
     QList<DeviceInfo*> m_devices;
 //    bool m_foundService;
     QTimer *m_readTimer;
+
     bool m_connected;
     void searchCharacteristic();
     int m_currentService;

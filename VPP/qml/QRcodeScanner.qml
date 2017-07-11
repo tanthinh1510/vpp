@@ -13,6 +13,8 @@ Component{
         property int  size: 3
         property int detectedTags: 0
         property string lastTag: ""
+        property int oneDetect: 0
+        property int count: 0
 
         //    Rectangle
         //    {
@@ -21,16 +23,16 @@ Component{
         //        anchors.fill: videoOutput
         //    }
 
-        Text
-        {
-            id: text1
-            wrapMode: Text.Wrap
-            font.pixelSize: 20
-            anchors.top: parent.top
-            anchors.left: parent.left
-            z: 50
-            text: "Tags detected: " + detectedTags
-        }
+//        Text
+//        {
+//            id: text1
+//            wrapMode: Text.Wrap
+//            font.pixelSize: 20
+//            anchors.top: parent.top
+//            anchors.left: parent.left
+//            z: 50
+//            text: "Tags detected: " + detectedTags
+//        }
         //    Text
         //    {
         //        id: fps
@@ -54,8 +56,8 @@ Component{
         {
             id: videoOutput
             source: camera
-            anchors.top: text1.bottom
-            anchors.bottom: text2.top
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
             autoOrientation: true
@@ -185,14 +187,30 @@ Component{
                 enabledDecoders: QZXing.DecoderFormat_EAN_13 | QZXing.DecoderFormat_CODE_39 | QZXing.DecoderFormat_QR_CODE
 
                 onTagFound: {
-                    console.log(tag + " | " + decoder.foundedFormat() + " | " + decoder.charSet());
-
                     window.detectedTags++;
                     window.lastTag = tag;
+
+                    if(window.lastTag.length == 17)  window.oneDetect ++;
+
+                    console.log("ondetect", oneDetect);
+
+                    if(oneDetect == 1){
+                        current_address = window.lastTag;
+                        _httpClient.send_request_open(current_user,window.lastTag)
+                        resetid.running = true
+//                        window.oneDetect = 0;
+//                        window.count = 0;
+                        stackView.pop();
+                        console.log("ondetect 1 ", oneDetect);
+
+                    }
+                    // ble here
                 }
+
 
                 tryHarder: false
             }
+
 
             onDecodingStarted:
             {
@@ -209,17 +227,27 @@ Component{
                 //           console.log("frame finished: " + succeeded, decodeTime, timePerFrameDecode, framesDecoded);
             }
         }
-
-        Text
-        {
-            id: text2
-            wrapMode: Text.Wrap
-            font.pixelSize: 20
-            anchors.bottom: parent.bottom
-            anchors.left: parent.left
-            z: 50
-            text: "Last tag: " + lastTag
+        Timer{
+            id: resetid
+            interval: 300
+            repeat: false
+            running: false
+            onTriggered: {
+                window.oneDetect = 0;
+                window.count = 0;
+            }
         }
+
+//        Text
+//        {
+//            id: text2
+//            wrapMode: Text.Wrap
+//            font.pixelSize: 20
+//            anchors.bottom: parent.bottom
+//            anchors.left: parent.left
+//            z: 50
+//            text: "Last tag: " + lastTag
+//        }
         //    Switch {
         //        text: "Autofocus"
         //        checked: camera.focus.focusMode === CameraFocus.FocusContinuous

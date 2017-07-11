@@ -19,5 +19,7 @@
         <file>images/back@2x.png</file>
         <file>images/back.png</file>
         <file>qml/DashBoard.qml</file>
+        <file>qml/LoginPopup.qml</file>
+        <file>qml/PopupMsg.qml</file>
     </qresource>
 </RCC>

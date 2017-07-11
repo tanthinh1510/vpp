@@ -150,9 +150,15 @@ void BLEInterface::connectCurrentDevice(QString _address)
         m_currentService = 0;
 //        emit devivedisconnect();
 
+        m_control->deleteLater();
+        m_control = NULL;
+        m_service->deleteLater();
+        m_service = NULL;
+        m_readTimer->deleteLater();
+        m_readTimer = NULL;
+
     }
-    m_readTimer->deleteLater();
-    m_readTimer = NULL;
+
 
      QBluetoothAddress ble_address(_address);
 
@@ -185,8 +191,8 @@ void BLEInterface::onDeviceConnected()
 void BLEInterface::onDeviceDisconnected()
 {
     m_control->disconnectFromDevice();
-    delete m_control;
-    m_control = 0;
+//    delete m_control;
+//    m_control = 0;
     emit devivedisconnect();
     update_connected(false);
     emit statusInfoChanged("Service disconnected", false);
@@ -212,8 +218,12 @@ void BLEInterface::onServiceScanDone()
         emit servicesChanged(m_services);
         m_currentService = -1;// to force call update_currentService(once)
         setCurrentService(2);
+
         qDebug() << "set service: " << m_currentService;
         emit statusInfoChanged("All services discovered.", true);
+        emit ble_connect();
+
+
     }
 }
 
@@ -228,8 +238,8 @@ void BLEInterface::disconnectDevice()
 //    }
 
     m_control->disconnectFromDevice();
-    delete m_service;
-    m_service = 0;
+//    delete m_service;
+//    m_service = 0;
     emit devivedisconnect();
     //disable notifications
     if (m_notificationDesc.isValid() && m_service) {

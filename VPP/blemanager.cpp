@@ -4,7 +4,7 @@ BLEmanager::BLEmanager(QObject *parent) : QObject(parent), localDevice(new QBlue
 {
     power_enable();
     m_bleInterface = new BLEInterface(this);
-
+    m_timer = new QTimer();
 
     connect(m_bleInterface, &BLEInterface::dataReceived,
             this, &BLEmanager::dataReceived);
@@ -19,6 +19,8 @@ BLEmanager::BLEmanager(QObject *parent) : QObject(parent), localDevice(new QBlue
         emit device_connect(false);
     });
     connect(m_bleInterface,SIGNAL(connectedChanged(bool)),this,SLOT(update_connect_status(bool)));
+    connect(m_bleInterface,SIGNAL(ble_connect()),this,SLOT(start_timer()));
+//    connect(m_timer,SIGNAL(timeout()),this,SLOT(write_ble()));
 
 }
 void BLEmanager::update_connect_status(bool _status)
@@ -71,5 +73,24 @@ void BLEmanager::power_enable()
 void BLEmanager::dataReceived(QByteArray data)
 {
     qDebug() << "Data receiver: " << data;
+    m_bleInterface->disconnectDevice();
+//    connect_to_device("00:00:00:00:00:00");
+    emit opened_door();
 
+}
+
+void BLEmanager::write_ble()
+{
+    QString open = "1";
+    QByteArray data = QByteArray(open.toLatin1());
+    m_bleInterface->write(data);
+//    unsigned char datapass[] = {1};
+//    int size = sizeof(datapass);
+//    m_bleInterface->write(QByteArray((char*)datapass,size));
+//    m_timer->stop;
+}
+
+void BLEmanager::start_timer()
+{
+    QTimer::singleShot(300, this, SLOT(write_ble()));
 }

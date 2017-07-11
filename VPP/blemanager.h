@@ -13,6 +13,7 @@
 #include <QBluetoothLocalDevice>
 
 #include "QTime"
+#include "QTimer"
 #include <QDateTime>
 #include <QList>
 
@@ -31,16 +32,20 @@ public:
 signals:
     void ble_name(QString _name, QString _add);
     void device_connect(bool _status);
+    void opened_door();
 public slots:
 
 private slots:
     void update_connect_status(bool _status);
     void dataReceived(QByteArray data);
+    void write_ble();
+    void start_timer();
 
 
 private:
     BLEInterface *m_bleInterface;    
     QBluetoothLocalDevice *localDevice;
+    QTimer *m_timer;
 };
 
 #endif // BLEMANAGER_H
