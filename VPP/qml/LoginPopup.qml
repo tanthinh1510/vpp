@@ -5,6 +5,8 @@ import QtQuick.Controls.Material 2.2
 
 Page {
     id: loginPage
+    property alias username: iduser.text
+    property alias password: idPassword.text
 
     onVisibleChanged: {
         if (visible) {
@@ -18,17 +20,17 @@ Page {
         anchors.centerIn: parent
         spacing: 35 *size_height
 
-//        Label {
-//            text: "Đăng Nhập"
-//            anchors.horizontalCenter: parent.horizontalCenter
-//            font.bold: true
-//            font.pixelSize: 20 * size_scale//fntsize + 4
-//        }
-//        Rectangle{
-//            height: 5
-//            color: "transparent"
-//            width: 1
-//        }
+        //        Label {
+        //            text: "Đăng Nhập"
+        //            anchors.horizontalCenter: parent.horizontalCenter
+        //            font.bold: true
+        //            font.pixelSize: 20 * size_scale//fntsize + 4
+        //        }
+        //        Rectangle{
+        //            height: 5
+        //            color: "transparent"
+        //            width: 1
+        //        }
         Row {
             Label {
                 anchors.verticalCenter: parent.verticalCenter
@@ -39,8 +41,7 @@ Page {
             TextField {
                 id: iduser
                 width: 220 * size_width
-                text: "tamhuy"//mainController.isDebugmode() ? mainController.getConfigUserpwd() : ""
-
+                text: ""
                 onDisplayTextChanged: loginErrorMsg.text = ""
             }
         }
@@ -57,7 +58,7 @@ Page {
             TextField {
                 id: idPassword
                 width: 220 * size_width
-                text: "123456"//mainController.isDebugmode() ? mainController.getConfigUserpwd() : ""
+                text: ""
                 echoMode: TextInput.Password
                 onDisplayTextChanged: loginErrorMsg.text = ""
             }
@@ -68,11 +69,11 @@ Page {
             Layout.alignment: Qt.AlignHCenter
             text: " "
         }
-//        Rectangle{
-//            height: 1
-//            color: "transparent"
-//            width: 1
-//        }
+        //        Rectangle{
+        //            height: 1
+        //            color: "transparent"
+        //            width: 1
+        //        }
 
         Row {
             spacing: 10 * size_width
@@ -85,9 +86,12 @@ Page {
                 width: 150 * size_width
                 height: 70 *size_height
                 Material.accent: Material.Orange
+                highlighted: true
                 onClicked: {
+                    busystatus = true
                     _httpClient.login_to_server(iduser.text, idPassword.text)
                     current_user = iduser.text;
+                    _bleManager.save_database(iduser.text, idPassword.text);
                 }
             }
 
@@ -98,9 +102,40 @@ Page {
                 width: 150 * size_width
                 onClicked: {
                     idPassword.text = ""
-
+                    iduser.text = ""
                 }
             }
+        }
+    }
+    Connections{
+        target: _bleManager
+        onGet_user_infor_from_db:{
+            username = _name
+            password = _pass
+            if(username != "" && password != ""){
+                _httpClient.login_to_server(iduser.text, idPassword.text)
+                current_user = iduser.text;
+                busystatus = true
+
+            }
+
+        }
+    }
+
+    Timer{
+        interval: 1
+        repeat: false
+        running: true
+        onTriggered: {
+            _bleManager.load_database();
+        }
+    }
+    Connections{
+        target: mainwindows
+        onLogout:{
+            idPassword.text = ""
+            iduser.text = ""
+            stackView.pop()
         }
     }
 

@@ -201,6 +201,7 @@ Component{
 //                        window.oneDetect = 0;
 //                        window.count = 0;
                         stackView.pop();
+                        busystatus = true
                         console.log("ondetect 1 ", oneDetect);
 
                     }

@@ -23,6 +23,10 @@ ApplicationWindow
     property double size_scale: (size_width + size_height) / 2
     property string current_user: ""
 
+    property bool busystatus: false
+
+    signal logout();
+
     Settings {
         id: settings
         property string style: "Material"
@@ -47,7 +51,7 @@ ApplicationWindow
     header: ToolBar {
         Material.foreground: "white"
 
-        height: 70
+        height: 70 *size_height
         Rectangle{
             anchors.fill: parent
             color: "#EF6C00"
@@ -55,7 +59,7 @@ ApplicationWindow
                 id: titleLabel
                 text:  "VPP"
                 color: "white"
-                font.pixelSize: 20
+                font.pixelSize: 20 *size_scale
                 elide: Label.ElideRight
                 anchors.centerIn: parent
 
@@ -63,17 +67,18 @@ ApplicationWindow
         }
 
         RowLayout {
-            spacing: 20
+            spacing: 20 *size_width
             anchors.fill: parent
             ToolButton {
                 contentItem: Image {
                     fillMode: Image.Pad
+
                     horizontalAlignment: Image.AlignHCenter
                     verticalAlignment: Image.AlignVCenter
-                    source: stackView.depth > 1 ? "images/back.png" : ""
+                    source: stackView.depth > 2 ? "images/back.png" : ""
                 }
                 onClicked: {
-                    if (stackView.depth > 1) {
+                    if (stackView.depth > 2) {
                         stackView.pop()
 
                     } else {
@@ -88,10 +93,13 @@ ApplicationWindow
         id: stackView
         anchors.fill: parent
         focus: true
-        Keys.onReleased: if (event.key === Qt.Key_Back && stackView.depth > 1) {
-                             stackView.pop();
-                             event.accepted = true;
-                         }
+        Keys.onReleased: {
+//            if (event.key === Qt.Key_Back && stackView.depth > 2) {
+//                             stackView.pop();
+//                             event.accepted = true;
+//                         }
+        }
+
         initialItem: LoginPopup{
 
         }
@@ -122,6 +130,7 @@ ApplicationWindow
               msgid.msg = "        Đăng nhập không thành công \n Vui lòng kiểm tra lại tài khoản và mật khẩu";
               msgid.open()
           }
+          busystatus = false
        }
        onAccess_status:{
           if(_status == 0){
@@ -134,15 +143,24 @@ ApplicationWindow
           else{
               console.log("DO NOT access to open the door", current_address)
               msgid.msg = "Tài khoản không được cấp quyền mở cửa";
+              busystatus = false
 
               msgid.open()
           }
        }
    }
+   BusyIndicator {
+       id: busylogin
+       anchors.centerIn: parent
+
+       running: busystatus
+   }
+
    Connections{
        target: _bleManager
        onOpened_door:{
            msgid.msg = "Cửa đã mở";
+           busystatus = false
            msgid.open()
        }
    }

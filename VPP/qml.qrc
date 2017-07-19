@@ -21,5 +21,6 @@
         <file>qml/DashBoard.qml</file>
         <file>qml/LoginPopup.qml</file>
         <file>qml/PopupMsg.qml</file>
+        <file>images/logout.png</file>
     </qresource>
 </RCC>
