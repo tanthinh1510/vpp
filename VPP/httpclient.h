@@ -27,6 +27,7 @@ class HttpClient : public QObject
 public:
     HttpClient(QObject* parent = 0);
     Q_INVOKABLE void login_to_server(QString _name, QString _pass);
+    Q_INVOKABLE void change_password(QString _user, QString _old, QString _new);
     Q_INVOKABLE void send_request_open(QString _name, QString _mac);
     Q_INVOKABLE void get_all_device_cloud();
 
@@ -55,6 +56,7 @@ signals:
     void update_device_id_from_cloud(QString _group, QString _name,int _id);
     void login_status(int _status);
     void access_status(int _status);
+    void changePass_status(int _status);
     void get_msg_open(QString _msg);
 private slots:
     void read_data_request(QNetworkReply *reply);

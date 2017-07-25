@@ -1,4 +1,4 @@
-#include "httpclient.h"
+﻿#include "httpclient.h"
 
 
 HttpClient::HttpClient(QObject* parent)
@@ -20,6 +20,22 @@ void HttpClient::login_to_server(QString _name, QString _pass)
     current_api  = api_login;
     api_login.append(datalogin);
     sendRequest(api_login,datalogin);
+}
+
+void HttpClient::change_password(QString _user, QString _old, QString _new)
+{
+    _method = HttpRequestMethod::GET;
+    QByteArray dataPassChange = "{\"u\":\"";
+    dataPassChange.append(_user);
+    dataPassChange.append("\",\"o_p\":\"");
+    dataPassChange.append(_old);
+    dataPassChange.append("\",\"n_p\":\"");
+    dataPassChange.append(_new);
+    dataPassChange.append("\"}");
+    QString api_changePass = "v001/vpp/api/login?cm=changepassword&dt=";
+    current_api = api_changePass;
+    api_changePass.append(dataPassChange);
+    sendRequest(api_changePass,dataPassChange);
 }
 
 
@@ -146,6 +162,7 @@ void HttpClient::process_json(QString _data)
     qDebug () << "msg " << jsonObject["msg"].toString();
     if(current_api == "v001/vpp/api/login?cm=login&dt=") emit login_status(jsonObject["err"].toInt());
     else if(current_api == "v001/vpp/api/accessdoor?cm=access&dt=") emit access_status(jsonObject["err"].toInt());
+    else if(current_api == "v001/vpp/api/login?cm=changepassword&dt=") emit changePass_status(jsonObject["err"].toInt());
 
     QJsonArray jsonArray = doc.array();
 

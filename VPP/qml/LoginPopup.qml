@@ -91,6 +91,7 @@ Page {
                     busystatus = true
                     _httpClient.login_to_server(iduser.text, idPassword.text)
                     current_user = iduser.text;
+                    current_password = idPassword.text;
                     _bleManager.save_database(iduser.text, idPassword.text);
                 }
             }
@@ -115,6 +116,7 @@ Page {
             if(username != "" && password != ""){
                 _httpClient.login_to_server(iduser.text, idPassword.text)
                 current_user = iduser.text;
+                current_password = idPassword.text
                 busystatus = true
 
             }

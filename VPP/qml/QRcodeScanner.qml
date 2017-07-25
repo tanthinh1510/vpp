@@ -239,34 +239,5 @@ Component{
             }
         }
 
-//        Text
-//        {
-//            id: text2
-//            wrapMode: Text.Wrap
-//            font.pixelSize: 20
-//            anchors.bottom: parent.bottom
-//            anchors.left: parent.left
-//            z: 50
-//            text: "Last tag: " + lastTag
-//        }
-        //    Switch {
-        //        text: "Autofocus"
-        //        checked: camera.focus.focusMode === CameraFocus.FocusContinuous
-        //        anchors {
-        //            right: parent.right
-        //            bottom: parent.bottom
-        //        }
-        //        onCheckedChanged: {
-        //            if (checked) {
-        //                camera.focus.focusMode = CameraFocus.FocusContinuous
-        //                camera.focus.focusPointMode = CameraFocus.FocusPointAuto
-        //            } else {
-        //                camera.focus.focusPointMode = CameraFocus.FocusPointCustom
-        //                camera.focus.customFocusPoint = Qt.point(0.5,  0.5)
-        //            }
-        //        }
-        //        font.family: Qt.platform.os === 'android' ? 'Droid Sans Mono' : 'Monospace'
-        //        font.pixelSize: Screen.pixelDensity * 5
-        //    }
     }
 }

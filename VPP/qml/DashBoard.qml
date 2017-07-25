@@ -48,19 +48,31 @@ Component{
                 }
             }
         }
+        Button{
+            id: changepassbt
+            height: 50 *size_height
+            width: 250 *size_width
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.top: hellorow.bottom; anchors.bottomMargin: 10* size_height
+            text: "Đổi mật khẩu"
+            highlighted: true
+            Material.accent: Material.Grey
+            onClicked: {
+                stackView.push(changepass)
+            }
+        }
 
         Button{
             id: qrscan
-            z:10
             height: 100 *size_height
             width: 270 *size_width
-            anchors.centerIn: parent
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom; anchors.bottomMargin: 200* size_height
             text: "Quét QR để mở cửa"
             highlighted: true
             Material.accent: Material.Blue
             onClicked: {
                 stackView.push(qrScanAddress)
-//                loginpu.open()
             }
         }
     }

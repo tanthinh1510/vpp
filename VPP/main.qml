@@ -22,6 +22,8 @@ ApplicationWindow
     property double size_height  : Screen.desktopAvailableHeight/720
     property double size_scale: (size_width + size_height) / 2
     property string current_user: ""
+    property string current_password: ""
+    property string current_password_change: ""
 
     property bool busystatus: false
 
@@ -38,6 +40,9 @@ ApplicationWindow
         id: dashboard
 
 
+    }
+    ChangePass{
+        id: changepass
     }
 
     Shortcut {
@@ -147,6 +152,18 @@ ApplicationWindow
 
               msgid.open()
           }
+       }
+       onChangePass_status:{
+           if(_status == 0){
+               stackView.pop()
+               msgid.msg = "Thay đổi mật khẩu thành công";
+               msgid.open();
+               _bleManager.save_database(current_user, current_password_change);
+           }
+           else{
+               msgid.msg = "Thay đổi mật khẩu không thành công";
+               msgid.open();
+           }
        }
    }
    BusyIndicator {

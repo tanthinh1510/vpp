@@ -22,5 +22,6 @@
         <file>qml/LoginPopup.qml</file>
         <file>qml/PopupMsg.qml</file>
         <file>images/logout.png</file>
+        <file>qml/ChangePass.qml</file>
     </qresource>
 </RCC>
